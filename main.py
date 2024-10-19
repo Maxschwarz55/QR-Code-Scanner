@@ -1,4 +1,4 @@
-import sqlite3
+import sqlite3 as db
 import qrcode
 import random
 import string
@@ -9,7 +9,7 @@ def generate_random_string(length):
     return random_string
 
 
-def create_qr_code(size):
+def create_qr_code():
     qr = qrcode.QRCode(
     version=1,
     error_correction=qrcode.constants.ERROR_CORRECT_H,
@@ -18,7 +18,8 @@ def create_qr_code(size):
     )
 
     # Add data to the QR code
-    qr.add_data(1)
+    id = generate_random_string(10)
+    qr.add_data(id)
 
     # Compile the QR code data
     qr.make(fit=True)
@@ -29,7 +30,14 @@ def create_qr_code(size):
     # Save the image
     img.save('custom_qr.png')
 
+def init_database():
+    conn = db.connect("test.db")
+    cursor = conn.cursor()
+
+    cursor.execute("CREATE TABLE contacts (lname text, fname text, num int, email text, id text)")
+    cursor.execute("INSERT INTO contacts VALUES('Schwarz', 'Max' )")
+
 def main():
-    print(generate_random_string(10))
+    create_qr_code()
 
 main()
