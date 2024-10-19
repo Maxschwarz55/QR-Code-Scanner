@@ -3,6 +3,9 @@ import qrcode
 import random
 import string
 
+conn = db.connect("test.db")
+cursor = conn.cursor()
+
 def generate_random_string(length):
     characters = string.ascii_letters + string.digits
     random_string = ''.join(random.choices(characters, k=length))
@@ -29,15 +32,37 @@ def create_qr_code():
 
     # Save the image
     img.save('custom_qr.png')
+    return id
 
-def init_database():
-    conn = db.connect("test.db")
-    cursor = conn.cursor()
+def add_entry(lname, fname, num, email):
 
-    cursor.execute("CREATE TABLE contacts (lname text, fname text, num int, email text, id text)")
-    cursor.execute("INSERT INTO contacts VALUES('Schwarz', 'Max' )")
+    id = create_qr_code()  # Call the function properly
+
+    # Create the table if it doesn't exist
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS contacts (
+            lname TEXT, 
+            fname TEXT, 
+            num INTEGER, 
+            email TEXT, 
+            id TEXT
+        )
+    """)
+
+    cursor.execute("INSERT INTO contacts (lname, fname, num, email, id) VALUES (?, ?, ?, ?, ?)",
+                   (lname, fname, num, email, id))
+    conn.commit()
+
+    cursor.execute("SELECT * FROM contacts")
+
+def display_database(): 
+    
+    rows = cursor.fetchall()
+
+    for row in rows:
+        print(row)
 
 def main():
-    create_qr_code()
+    add_entry()
 
 main()
