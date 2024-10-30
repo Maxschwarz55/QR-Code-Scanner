@@ -114,12 +114,32 @@ def decoder(image):
         
         cv2.putText(frame, string, (x,y), cv2.FONT_HERSHEY_SIMPLEX,0.8,(255,0,0), 2)
         in_database(barcodeData)
-        
+
+
+
 
 def main():
-    add_entry("Schwarz", "Max", 2066024579, "max.schwarz9@gmail.com")
-    add_entry("Bob", "Jones", 1111111111, "bobjones@gmail.com")
+    add_entry("Schwarz", "Max", 2066024579, "max.schwarz9@gmail")
     display_database()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
